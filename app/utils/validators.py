@@ -68,4 +68,24 @@ def validate_expiration_date(expiration_date: str) -> str:
         raise ValueError(f"Invalid Expiration Date: {e}")
     
     return expiration_date
+
+def validate_ammount(ammount: float) -> float:
+    """Validate Ammount"""
+    if not ammount:
+        raise ValueError("Missing ammount field")
+    if ammount <= 0:
+        raise ValueError("Invalid ammount, should be bigger than 0")
+    ammount_str = str(ammount)
+    if ammount_str[::-1].find('.') > 2:
+        raise ValueError("Invalid ammount, should have 2 decimal cases")
+    
+    return ammount
+
+def validate_currency(currency: str) -> str:
+    """Validates Currency"""
+    if not currency:
+        raise ValueError("Missing currency field")
+    
+    return currency
+        
     
