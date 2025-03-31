@@ -10,8 +10,10 @@ class PaymentServiceDatabase:
     def __init__(self):
         """Initialize MongoDB connection and setup collections."""
         try:
+            print("trying ...")
             self.client = MongoClient(PaymentDatabaseConfig.MONGO_CONN_STR)
             self.client.admin.command('ping')  # Ensures MongoDB is reachable
+            print("connected")
             self.db = self.client[PaymentDatabaseConfig.MONGO_DB]
 
             # Create collections and indexes
