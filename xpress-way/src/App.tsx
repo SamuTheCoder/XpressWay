@@ -46,7 +46,7 @@ function App() {
 
     setTimeout(async () => {
       try {
-        const response = await fetch(`http://localhost:5000/v1/payments/${paymentId}/confirm`, {
+        const response = await fetch(`http://localhost:6050/v1/payments/${paymentId}/confirm`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });

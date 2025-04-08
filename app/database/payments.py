@@ -37,3 +37,7 @@ class Payments:
         """Retrieve payment status by ID."""
         payment = self.payments.find_one({"_id": ObjectId(payment_id)}, {"status": 1})
         return payment["status"] if payment else None
+    
+    def get_payment(self, payment_id: str) -> dict | None:
+        """Retrieve payment details by ID."""
+        return self.payments.find_one({"_id": ObjectId(payment_id)})

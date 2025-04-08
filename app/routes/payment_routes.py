@@ -37,7 +37,7 @@ def confirm_payment(payment_id):
 
     return jsonify({"message": "Payment confirmed"}), 200
 
-@payment_routes.route('/v1/payments/<payment_id>', methods=['GET'])
+@payment_routes.route('/v1/payments/<payment_id>/status', methods=['GET'])
 def get_payment(payment_id):
     """
     Endpoint to get a payment by payment_id.
@@ -45,4 +45,14 @@ def get_payment(payment_id):
     payment = payments.get_payment_status(payment_id)
     if payment:
         return jsonify({"status": payment}), 200
+    return jsonify({"error": "Payment not found"}), 404
+
+@payment_routes.route('/v1/payments/<payment_id>', methods=['GET'])
+def get_payment_data(payment_id):
+    """
+    Endpoint to get all payments data
+    """
+    payment = payments.get_payment(payment_id)
+    if payment:
+        return jsonify(payment), 200
     return jsonify({"error": "Payment not found"}), 404

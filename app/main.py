@@ -7,8 +7,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/v1/*": {"origins": "http://localhost:5173"}}) 
 
+@app.route("/")
+def home():
+    return "Flask Payment Service is Running!"
+
 # Register Routes
 app.register_blueprint(payment_routes)  # Using a blueprint for modularization
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=6050, debug=True)
