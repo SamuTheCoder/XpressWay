@@ -3,14 +3,19 @@ import './CustomForm.css';
 import { Form } from 'react-bootstrap';
 import { useState } from 'react';
 
+interface CustomFormProps {
+  onInputChange: (field: string, value: string) => void;
+  amount?: string;
+  currency?: string;
+}
 
-export default function CustomForm({ onInputChange }: { onInputChange: (field: string, value: string) => void }) {
+export default function CustomForm({ onInputChange, amount, currency }: CustomFormProps) {
   const [creditCard, setCreditCard] = useState('');
   const [expireDate, setExpireDate] = useState('');
   const [cvv, setCvv] = useState('');
 
   const handleInputChange = (field: string, value: string) => {
-    onInputChange(field, value); // Send input data to parent
+    onInputChange(field, value);
   };
 
   return (
@@ -52,8 +57,7 @@ export default function CustomForm({ onInputChange }: { onInputChange: (field: s
           />
         </Form.Group>
       </Form>
-      <h1 className='fs-2 total-div'>Total: $100</h1>
+      <h1 className='fs-2 total-div'>Total: {currency} {amount}</h1>
     </div>
   );
-        
 }

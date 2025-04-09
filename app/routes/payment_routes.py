@@ -22,7 +22,7 @@ def create_payment():
         return jsonify({"error": "Missing amount or currency"}), 400
     
     payment_id = payments.create_payment(amount, currency)
-    return jsonify({"payment_id": payment_id}), 201
+    return jsonify({"payment_id": payment_id, "url": "https://localhost:5173"}), 201
 
 @payment_routes.route('/v1/payments/<payment_id>/confirm', methods=['POST'])
 def confirm_payment(payment_id):

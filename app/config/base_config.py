@@ -2,6 +2,9 @@ import os
 import warnings
 from typing import Optional
 from . import config_logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_env_variable(var_name: str, default_value: Optional[str] = None) -> str:
     """

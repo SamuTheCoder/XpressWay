@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import './App.css'
 import './components/Form/CustomForm.tsx'
 import CustomForm from './components/Form/CustomForm.tsx'
@@ -14,8 +15,44 @@ function App() {
   const [expireDate, setExpireDate] = useState('');
   const [cvv, setCvv] = useState('');
 
-  const paymentId = "67e3525bc8bce8b95833cc76"; // Replace with actual ID
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const amount = queryParams.get('amount');
+  const currency = queryParams.get('currency');
+  console.log(amount, currency);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const productId = queryParams.get('product_id');
+  useEffect(() => {
+    const initiatePayment = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:8002/v1/payments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: amount,
+            currency: currency,
+          }),
+        });
 
+        if (!response.ok) {
+          throw new Error("Failed to create payment");
+        }
+
+        const result = await response.json();
+        setPaymentId(result.payment_id);
+        console.log("Payment ID:", result.payment_id);
+      } catch (error) {
+        console.error("Error creating payment:", error);
+        
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initiatePayment();
+  }, [amount, currency]); 
+  // 
   // Function to validate form fields
   const validateForm = () => {
     const cardRegex = /^[0-9]{16}$/;  // Simple 16-digit card number check
@@ -46,7 +83,7 @@ function App() {
 
     setTimeout(async () => {
       try {
-        const response = await fetch(`http://localhost:6050/v1/payments/${paymentId}/confirm`, {
+        const response = await fetch(`http://localhost:8002/v1/payments/${paymentId}/confirm`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });
@@ -57,6 +94,7 @@ function App() {
 
         setStatus("Payment Successful");
         setMessage({ type: "success", text: status });
+        window.location.href = `http://localhost:3000/products?paymentId=${paymentId}&productId=${productId}`;
       } catch (error) {
         console.error("Error confirming payment:", error);
         setStatus("Payment Failed");
@@ -72,14 +110,18 @@ function App() {
     <>
       <Header/>
       <div className="form-container m-3 p-2">
-        <CustomForm onInputChange={(field, value) => {
+        <CustomForm 
+          onInputChange={(field, value) => {
             if (field === "creditCard") setCreditCard(value);
             if (field === "expireDate") setExpireDate(value);
             if (field === "cvv") setCvv(value);
-          }}/>
-          <Button variant="success" type="submit" className="w-25 fs-3" onClick={handlePayment} disabled={loading}>
+          }}
+          amount={amount}
+          currency={currency}
+        />
+        <Button variant="success" type="submit" className="w-25 fs-3" onClick={handlePayment} disabled={loading}>
           {loading ? "Processing..." : "Pay"}
-          </Button>
+        </Button>
       </div>
       <p className="bottom-label">
         {message.text && <Alert variant={message.type} className="mt-3">{message.text}</Alert>}
