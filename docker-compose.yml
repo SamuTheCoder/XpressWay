@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./xpress-way
+      dockerfile: ./Dockerfile
+    ports:
+      - "5173:80" # Map container port 80 to host port 5173
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./app
+      dockerfile: ./Dockerfile
+    ports:
+      - "8002:8002" # Map container port 8002 to host port 8002
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_CONN_STR=mongodb://mongo:27017
+      - MONGO_DB=payments
+      - PAYMENTS_URL="https://localhost:3000"
+      - BACKEND_URL="https://localhost:8002"
+      - FRONTEND_URL="https://localhost:5173"
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:8.0.9
+    container_name: mongo
+    ports:
+      - "27017:27017" # Map container port 27017 to host port 27017
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo-data: # Persistent storage for MongoDB
+
+networks:
+  app-network:

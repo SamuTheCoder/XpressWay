@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import './App.css'
 import './components/Form/CustomForm.tsx'
@@ -17,16 +17,20 @@ function App() {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const amount = queryParams.get('amount');
-  const currency = queryParams.get('currency');
+  const amount = queryParams.get('amount') || "0";
+  const currency = queryParams.get('currency') || "USD";
   console.log(amount, currency);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const productId = queryParams.get('product_id');
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL; // Get backend URL from .env
+
+  // Get backend url from .env
   useEffect(() => {
     const initiatePayment = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8002/v1/payments`, {
+        const response = await fetch(`${backendUrl}/v1/payments`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -83,7 +87,7 @@ function App() {
 
     setTimeout(async () => {
       try {
-        const response = await fetch(`http://localhost:8002/v1/payments/${paymentId}/confirm`, {
+        const response = await fetch(`${backendUrl}/v1/payments/${paymentId}/confirm`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });

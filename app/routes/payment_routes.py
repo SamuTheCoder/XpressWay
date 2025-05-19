@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from datetime import datetime, UTC
 from database.database_init import PaymentServiceDatabase
 from database.payments import Payments
+import os
 
 payment_routes = Blueprint("payments", __name__)
 
@@ -22,7 +23,8 @@ def create_payment():
         return jsonify({"error": "Missing amount or currency"}), 400
     
     payment_id = payments.create_payment(amount, currency)
-    return jsonify({"payment_id": payment_id, "url": "https://localhost:5173"}), 201
+    frontend_url = os.getenv("FRONTEND_URL")
+    return jsonify({"payment_id": payment_id, "url": frontend_url}), 201
 
 @payment_routes.route('/v1/payments/<payment_id>/confirm', methods=['POST'])
 def confirm_payment(payment_id):
