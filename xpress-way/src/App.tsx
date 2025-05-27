@@ -24,6 +24,7 @@ function App() {
   const productId = queryParams.get('product_id');
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL; // Get backend URL from .env
+  const paymentsUrl = import.meta.env.VITE_PAYMENTS_URL; // Get payments URL from .env
 
   // Get backend url from .env
   useEffect(() => {
@@ -98,7 +99,7 @@ function App() {
 
         setStatus("Payment Successful");
         setMessage({ type: "success", text: status });
-        window.location.href = `http://localhost:3000/products?paymentId=${paymentId}&productId=${productId}`;
+        window.location.href = `${paymentsUrl}/products?paymentId=${paymentId}&productId=${productId}`;
       } catch (error) {
         console.error("Error confirming payment:", error);
         setStatus("Payment Failed");
