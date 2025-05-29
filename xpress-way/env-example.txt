@@ -1,0 +1,3 @@
+# Frontend client env (Vite will replace these at build time)
+VITE_BACKEND_URL=http://localhost:8002
+VITE_COMPOSER_URL=http://localhost:3000
