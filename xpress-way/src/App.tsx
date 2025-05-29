@@ -26,12 +26,14 @@ function App() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL; // Get backend URL from .env
   const composerUrl = import.meta.env.VITE_COMPOSER_URL; // Get payments URL from .env
 
+  console.log("Backend URL:", backendUrl);
+  console.log("Composer URL:", composerUrl);
   // Get backend url from .env
   useEffect(() => {
     const initiatePayment = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${backendUrl}v1/payments`, {
+        const response = await fetch(`${backendUrl}/v1/payments`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -99,7 +101,7 @@ function App() {
 
         setStatus("Payment Successful");
         setMessage({ type: "success", text: status });
-        window.location.href = `${composerUrl}products?paymentId=${paymentId}&productId=${productId}`;
+        window.location.href = `${composerUrl}/products?paymentId=${paymentId}&productId=${productId}`;
       } catch (error) {
         console.error("Error confirming payment:", error);
         setStatus("Payment Failed");

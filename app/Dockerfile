@@ -23,4 +23,4 @@ ENV FLASK_RUN_HOST=${BACKEND_HOST}
 ENV FLASK_RUN_PORT=${BACKEND_PORT}
 
 # Run the application
-CMD ["flask", "run"]
+CMD ["python", "main.py"]

@@ -1,14 +1,17 @@
-version: "3.8"
-
 services:
   frontend:
     build:
       context: ./xpress-way
       dockerfile: ./Dockerfile
     ports:
-      - "${FRONTEND_PORT}:80" # Map container port 80 to host port 5173
+      - "${FRONTEND_PORT}:80" # Host port 5173 -> Container port 80
     depends_on:
       - backend
+    env_file:
+      - .env
+    environment:
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
+      - VITE_COMPOSER_URL=${VITE_COMPOSER_URL}
     networks:
       - app-network
 
@@ -17,7 +20,7 @@ services:
       context: ./app
       dockerfile: ./Dockerfile
     ports:
-      - "${BACKEND_PORT}:8002" # Map container port 8002 to host port 8002
+      - "${BACKEND_PORT}:8002" # Host port 8002 -> Container port 8002
     depends_on:
       - mongodb
     env_file:
@@ -25,23 +28,20 @@ services:
     environment:  
       - MONGO_CONN_STR=${MONGO_CONN_STR}
       - MONGO_DB=${MONGO_DB}
-      - PAYMENTS_URL="${PAYMENTS_URL}"
-      - BACKEND_URL="${BACKEND_URL}"
-      - FRONTEND_URL="${FRONTEND_URL}"
-      - PAYMENTS_HOST="${PAYMENTS_HOST}"
-      - PAYMENTS_PORT="${PAYMENTS_PORT}"
-      - BACKEND_HOST="${BACKEND_HOST}"
-      - BACKEND_PORT="${BACKEND_PORT}"
-      - FRONTEND_HOST="${FRONTEND_HOST}"
-      - FRONTEND_PORT="${FRONTEND_PORT}"
+      - BACKEND_URL=${BACKEND_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_PORT=${FRONTEND_PORT}
     networks:
       - app-network
 
   mongodb:
     image: mongo:8.0.9
-    container_name: mongo
+    container_name: mongodb
     ports:
-      - "${MONGO_PORT}:27017" # Map container port 27017 to host port 27017
+      - "${MONGO_PORT}:27017"
     volumes:
       - mongo-data:/data/db
     networks:
