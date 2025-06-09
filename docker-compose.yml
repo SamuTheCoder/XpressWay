@@ -22,7 +22,7 @@ services:
     ports:
       - "${BACKEND_PORT}:8002" # Host port 8002 -> Container port 8002
     depends_on:
-      - mongodb
+      - mongodb-xpressway
     env_file:
       - .env
     environment:  
@@ -37,9 +37,9 @@ services:
     networks:
       - app-network
 
-  mongodb:
+  mongodb-xpressway:
     image: mongo:8.0.9
-    container_name: mongodb
+    container_name: mongodb-xpressway
     ports:
       - "${MONGO_PORT}:27017"
     volumes:

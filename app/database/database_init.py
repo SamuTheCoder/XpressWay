@@ -11,6 +11,7 @@ class PaymentServiceDatabase:
         """Initialize MongoDB connection and setup collections."""
         try:
             print("trying ...")
+            print("mongo connection string:", PaymentDatabaseConfig.MONGO_CONN_STR)
             self.client = MongoClient(PaymentDatabaseConfig.MONGO_CONN_STR)
             self.client.admin.command('ping')  # Ensures MongoDB is reachable
             print("connected")
